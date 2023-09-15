@@ -1,45 +1,43 @@
 import React, {useState} from "react";
 
-//import "./Login.css";
-
-export default function Login() {
-    const [loginFormData, setLoginFormData] = useState({
+export default function Register() {
+    const [formData, setFormData] = useState({
         username: '',
         password: ''
+//        verifyPassword: ''
     });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setLoginFormData({
-            ...loginFormData,
+        setFormData({
+            ...formData,
             [name]: value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const loginResponse = await fetch("http://localhost:8080/login", {
+        const response = await fetch("http://localhost:8080/register", {
             method: "POST",
             mode: 'cors',
             headers: {
-               // 'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(loginFormData)
+            body: JSON.stringify(formData)
         });
-        console.log(loginFormData.username);
-        console.log(loginResponse.status, loginResponse.statusText, loginResponse.body);
-        if (loginResponse.status === 200) {
-            console.log("Login successful");
+        console.log(formData.username);
+        console.log(response.status, response.statusText, response.body);
+        if (response.status === 200) {
+            console.log("Registration successful");
         } else {
-            console.log("Login failed");
+            console.log("Registration failed");
         }
-
     };
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Registration</h1>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username:</label>
@@ -47,7 +45,7 @@ export default function Login() {
                         type="text"
                         id="username"
                         name="username"
-                        value={loginFormData.username}
+                        value={formData.username}
                         onChange={handleInputChange}
                         required
                     />
@@ -58,12 +56,25 @@ export default function Login() {
                         type="password"
                         id="password"
                         name="password"
-                        value={loginFormData.password}
+                        value={formData.password}
                         onChange={handleInputChange}
                         required
                     />
                 </div>
-                <button type="submit">Login</button>
+                {/*
+                <div>
+                    <label htmlFor="verifyPassword">verify Password:</label>
+                    <input
+                        type="password"
+                        id="verifyPassword"
+                        name="verifyPassword"
+                        value={formData.verifyPassword}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                */}
+                <button type="submit">Register</button>
             </form>
         </div>
     );
