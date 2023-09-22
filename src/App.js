@@ -29,6 +29,7 @@ function App() {
             {/* A <Routes> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
             <Routes>
+                <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
