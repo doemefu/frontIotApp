@@ -1,42 +1,160 @@
+import React, {useState, useEffect} from "react";
 import {
-    BrowserRouter as Router,
     Routes,
     Route,
     Link
 } from "react-router-dom";
-import Home from "./pages/home/index";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/App.css";
 
-function App() {
-  return (
-    <Router>
+import AuthService from "./services/auth.service";
+import AuthVerify from "./utils/AuthVerify";
+import EventBus from "./utils/EventBus";
+
+import Home from "./pages/home/index";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import Profile from "./pages/Profile";
+
+import HeaderUser from "./components/header/HeaderUser";
+import HeaderModerator from "./components/header/HeaderMod";
+import HeaderAdmin from "./components/header/HeaderAdmin";
+import DataView from "./pages/dataView/DataView";
+
+const App = () => {
+    const [showModeratorBoard, setShowModeratorBoard] = useState(false);
+    const [showAdminBoard, setShowAdminBoard] = useState(false);
+    const [currentUser, setCurrentUser] = useState(undefined);
+
+    const logOut = () => {
+        AuthService.logout();
+        setShowModeratorBoard(false);
+        setShowAdminBoard(false);
+        setCurrentUser(undefined);
+    };
+
+    // For mounting and initial setting
+    useEffect(() => {
+        const user = AuthService.getCurrentUser();
+
+        if (user) {
+            setCurrentUser(user);
+            setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
+            setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+        } else {
+            setCurrentUser(undefined);
+            setShowModeratorBoard(false);
+            setShowAdminBoard(false);
+        }
+
+        EventBus.on("logout", () => {
+            logOut();
+        });
+
+        return () => {
+            EventBus.remove("logout");
+        };
+    }, []);  // Empty dependency array makes it run only once at mount
+
+    // For reacting to currentUser changes
+    useEffect(() => {
+        if (currentUser) {
+            setShowModeratorBoard(currentUser.roles.includes("ROLE_MODERATOR"));
+            setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
+        }
+    }, [currentUser]);
+
+    return (
         <div>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/home">Home</Link>
+            <nav className="navbar navbar-expand navbar-dark bg-dark">
+                <Link to={"/"} className="navbar-brand">
+                    IoT-App
+                </Link>
+                <div className="navbar-nav mr-auto">
+                    <li className="nav-item">
+                        <Link to={"/home"} className="nav-link">
+                            Home
+                        </Link>
                     </li>
-                    <li>
-                        <Link to="/login">Login</Link>
-                    </li>
-                    <li>
-                        <Link to="/register">Register</Link>
-                    </li>
-                </ul>
+                    {currentUser && (
+                        <li className="nav-item">
+                            <Link to={"/dataView"} className="nav-link">
+                                DataView
+                            </Link>
+                        </li>
+                    )}
+                    {showModeratorBoard && (
+                        <li className="nav-item">
+                            <Link to={"/mod"} className="nav-link">
+                                Moderator Board
+                            </Link>
+                        </li>
+                    )}
+
+                    {showAdminBoard && (
+                        <li className="nav-item">
+                            <Link to={"/admin"} className="nav-link">
+                                Admin Board
+                            </Link>
+                        </li>
+                    )}
+
+                    {currentUser && (
+                        <li className="nav-item">
+                            <Link to={"/user"} className="nav-link">
+                                User
+                            </Link>
+                        </li>
+                    )}
+                </div>
+                {currentUser ? (
+                    <div className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <Link to={"/profile"} className="nav-link">
+                                {currentUser.username}
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <a href="/login" className="nav-link" onClick={logOut}>
+                                LogOut
+                            </a>
+                        </li>
+                    </div>
+                ) : (
+                    <div className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <Link to={"/login"} className="nav-link">
+                                Login
+                            </Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link to={"/register"} className="nav-link">
+                                Register
+                            </Link>
+                        </li>
+                    </div>
+                )}
             </nav>
 
-            {/* A <Routes> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-            </Routes>
+            <div className="container mt-3">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/index" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/user" element={<HeaderUser />} />
+                    <Route path="/mod" element={<HeaderModerator />} />
+                    <Route path="/admin" element={<HeaderAdmin />} />
+                    <Route path="/dataView" element={<DataView />} />
+                </Routes>
+            </div>
+
+            <AuthVerify logOut={logOut} />
         </div>
-    </Router>
-  );
-}
+    );
+};
 
 export default App;

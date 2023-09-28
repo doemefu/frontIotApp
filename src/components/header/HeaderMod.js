@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-
 import UserService from "../../services/user.service";
 
-//import logo from "../../assets/logo.svg";
-
-const Home = () => {
+const HeaderMod = () => {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        UserService.getPublicContent().then(
+        UserService.getModeratorBoard().then(
             (response) => {
                 setContent(response.data);
             },
@@ -34,4 +31,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HeaderMod;

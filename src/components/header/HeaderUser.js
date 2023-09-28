@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-
 import UserService from "../../services/user.service";
+import EventBus from "../../utils/EventBus";
 
-//import logo from "../../assets/logo.svg";
-
-const Home = () => {
+const HeaderUser = () => {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        UserService.getPublicContent().then(
+        UserService.getUserBoard().then(
             (response) => {
                 setContent(response.data);
             },
@@ -21,6 +19,10 @@ const Home = () => {
                     || error.toString();
 
                 setContent(_content);
+
+                if (error.response && error.response.status === 401) {
+                    EventBus.dispatch("logout");
+                }
             }
         );
     }, []);
@@ -34,4 +36,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HeaderUser;
