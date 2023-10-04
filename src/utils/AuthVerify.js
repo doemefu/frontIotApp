@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const parseJwt = (token) => {
@@ -23,8 +23,6 @@ const AuthVerify = (props) => {
             }
         }
     }, [location, props]);
-
-    return ;
 };
 
 export default AuthVerify;
