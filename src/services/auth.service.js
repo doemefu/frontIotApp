@@ -16,7 +16,8 @@ const login = (username, password) => {
             password,
         })
         .then((response) => {
-            if (response.data.accessToken) {
+            console.log("Login Response:", response);
+            if (response.data.username) {
                 TokenService.setUser(response.data);
             }
             return response.data;
@@ -24,12 +25,13 @@ const login = (username, password) => {
 };
 
 const logout = () => {
-    TokenService.removeUser();
-    return api
+    api
         .post("/auth/logout")
         .then((response) => {
-            return response.data;
+            console.log("Logout Response:", response);
+            //return response.data;
         });
+    TokenService.removeUser();
 };
 
 const getCurrentUser = () => {
