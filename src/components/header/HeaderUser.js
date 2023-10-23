@@ -20,7 +20,8 @@ const HeaderUser = () => {
 
                 setContent(_content);
 
-                if (error.response && error.response.status === 401) {
+                //403 equals to HTTP unauthorized
+                if (error.response && error.response.status === 403) {
                     EventBus.dispatch("logout");
                 }
             }
