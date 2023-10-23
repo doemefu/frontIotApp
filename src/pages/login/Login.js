@@ -49,7 +49,6 @@ const Login = () => {
             AuthService.login(username, password).then(
                 () => {
                     //comment out for debugging
-                    //console.log("JWT Cookie:", document.cookie);
                     navigate("/profile");
                     window.location.reload();
                 },
@@ -65,8 +64,6 @@ const Login = () => {
                                     && error.response.data.message)
                                 || error.message
                                 || error.toString();
-
-                        setMessage(resMessage);
                     }
                     setMessage(resMessage);
                     setLoading(false);

@@ -10,13 +10,18 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
+        console.log("instance.interceptors.request.use fullfilled");
         const token = TokenService.getLocalAccessToken();
         if (token) {
+            console.log("instance.interceptors.request.use fullfilled with token");
             config.headers["Authorization"] = 'Bearer ' + token;
+        }else {
+        console.log("instance.interceptors.request.use fullfilled without token");
         }
         return config;
     },
     (error) => {
+        console.log("instance.interceptors.request.use rejected");
         return Promise.reject(error);
     }
 );
@@ -34,12 +39,12 @@ instance.interceptors.response.use(
                 originalConfig._retry = true;
 
                 try {
-                    const rs = await instance.post("/auth/refreshtoken", {
+                    const axiosResponse = await instance.post("/auth/refreshtoken", {
                         refreshToken: TokenService.getLocalRefreshToken(),
                     });
 
-                    const { accessToken } = rs.data;
-                    TokenService.updateLocalAccessToken(accessToken);
+                    const { newAccessToken } = axiosResponse.data;
+                    TokenService.updateLocalAccessToken(newAccessToken);
 
                     return instance(originalConfig);
                 } catch (_error) {

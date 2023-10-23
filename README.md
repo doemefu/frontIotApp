@@ -4,8 +4,9 @@ Folder structure according to [this](https://blog.webdevsimplified.com/2022-07/r
 
 ## Important
 
-in package.json, change "start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
-to "start": "react-scripts start",
+in package.json:
+- for HTTPS: `"start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",`
+- for HTTP `"start": "react-scripts start",`
 
 
 # Getting Started with Create React App

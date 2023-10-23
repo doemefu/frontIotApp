@@ -21,10 +21,14 @@ const Profile = () => {
                     <strong>{currentUser.username}</strong> Profile
                 </h3>
             </header>
-            {/*
             <p>
                 <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
                 {currentUser.accessToken.substring(currentUser.accessToken.length - 20)}
+            </p>
+            {/*
+            <p>
+                <strong>Refresh-Token:</strong> {currentUser.refreshToken.substring(0, 20)} ...{" "}
+                {currentUser.refreshToken.substring(currentUser.refreshToken.length - 20)}
             </p>
             */}
             <p>
@@ -38,6 +42,9 @@ const Profile = () => {
                 {currentUser.roles &&
                     currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
             </ul>
+            {/*
+                //TODO: Add Status and timestamps
+            */}
         </div>
     );
 };

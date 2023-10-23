@@ -16,8 +16,9 @@ const login = (username, password) => {
             password,
         })
         .then((response) => {
-            console.log("Login Response:", response);
-            if (response.data.username) {
+            //console.log("Login Response:", response);
+            //if (response.data.username) {
+            if (response.data.accessToken) {
                 TokenService.setUser(response.data);
             }
             return response.data;
@@ -25,13 +26,15 @@ const login = (username, password) => {
 };
 
 const logout = () => {
+    //merkürdig
     api
         .post("/auth/logout")
         .then((response) => {
             console.log("Logout Response:", response);
             //return response.data;
+            //await response
+            TokenService.removeUser();
         });
-    TokenService.removeUser();
 };
 
 const getCurrentUser = () => {
