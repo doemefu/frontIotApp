@@ -76,13 +76,7 @@ const App = () => {
                             Home
                         </Link>
                     </li>
-                    {currentUser && (
-                        <li className="nav-item">
-                            <Link to={"/dataView"} className="nav-link">
-                                DataView
-                            </Link>
-                        </li>
-                    )}
+
                     {showModeratorBoard && (
                         <li className="nav-item">
                             <Link to={"/mod"} className="nav-link">
@@ -107,17 +101,29 @@ const App = () => {
                         </li>
                     )}
                 </div>
+
                 {currentUser ? (
                     <div className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <Link to={"/dataView"} className="nav-link">
+                                Data View
+                            </Link>
+                        </li>
                         <li className="nav-item">
                             <Link to={"/profile"} className="nav-link">
                                 {currentUser.username}
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <a href="/login" className="nav-link" onClick={logOut}>
+
+                            <Link className="nav-link" onClick={logOut} to={"/home"}>
+                                LogOut
+                            </Link>
+                            {/*
+                            <a  className="nav-link" onClick={logOut}>
                                 LogOut
                             </a>
+                             */}
                         </li>
                     </div>
                 ) : (
@@ -140,8 +146,8 @@ const App = () => {
             <div className="container mt-3">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/index" element={<Home />} />
                     <Route path="/home" element={<Home />} />
+                    <Route path="/index" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/profile" element={<Profile />} />
@@ -152,7 +158,7 @@ const App = () => {
                 </Routes>
             </div>
 
-            <AuthVerify logOut={logOut} />
+            {/* <AuthVerify logOut={logOut}/> */}
         </div>
     );
 };
