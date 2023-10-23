@@ -27,7 +27,7 @@ const validEmail = (value) => {
     }
 };
 
-const vusername = (value) => {
+const validUsername = (value) => {
     if (value.length < 3 || value.length > 20){
         return (
             <div className="alert alert-danger" role="alert">
@@ -37,7 +37,7 @@ const vusername = (value) => {
     }
 };
 
-const vpassword = (value) => {
+const validPassword = (value) => {
     if (value.length < 6 || value.length > 40){
         return (
             <div className="alert alert-danger" role="alert">
@@ -85,6 +85,7 @@ const Register = () => {
             AuthService.register(username, email, password).then(
                 (response) => {
                     setMessage(response.headers['responsemessage']);
+                    //setMessage(response.data.message);
                     setSuccessful(true);
 
                     setTimeout(() => {
@@ -93,7 +94,7 @@ const Register = () => {
                     }, 2000);
                 },
                 (error) => {
-                    let resMessage;
+                    let resMessage = "Lokaler Fehler";
                     if (error.response && error.response.headers) {
                         resMessage = error.response.headers['responsemessage'];
                         console.log(error.response.headers);
@@ -115,6 +116,7 @@ const Register = () => {
     return (
         <div className="col-md-12">
             <div className="card card-container">
+
                 <Form onSubmit={handleRegister} ref={form}>
                     {!successful && (
                         <div>
@@ -126,7 +128,7 @@ const Register = () => {
                                     name="username"
                                     value={username}
                                     onChange={onChangeUsername}
-                                    validations={[required, vusername]}
+                                    validations={[required, validUsername]}
                                 />
                             </div>
 
@@ -150,12 +152,12 @@ const Register = () => {
                                     name="password"
                                     value={password}
                                     onChange={onChangePassword}
-                                    validations={[required, vpassword]}
+                                    validations={[required, validPassword]}
                                 />
                             </div>
 
                             <div className="form-group">
-                                <button className="btn btn-primary btn-block">Sign Up</button>
+                                <button className="btn btn-primary btn-block">Register</button>
                             </div>
                         </div>
                     )}
