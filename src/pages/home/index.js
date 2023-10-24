@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { MediaQuery } from 'react-responsive';
 
 import UserService from "../../services/user.service";
-
-//import logo from "../../assets/logo.svg";
 
 const Home = () => {
     const [content, setContent] = useState("");
@@ -28,7 +27,13 @@ const Home = () => {
     return (
         <div className="container">
             <header className="jumbotron">
-                <h3>{content}</h3>
+                {/* Verwende die MediaQuery-Komponente für reaktionsfähiges Rendering */}
+                <MediaQuery minWidth={768}>
+                    <h3>{content} (Großes Display)</h3>
+                </MediaQuery>
+                <MediaQuery maxWidth={767}>
+                    <h3>{content} (Kleines Display)</h3>
+                </MediaQuery>
             </header>
         </div>
     );
