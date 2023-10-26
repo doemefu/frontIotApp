@@ -20,6 +20,7 @@ import HeaderUser from "./components/header/HeaderUser";
 import HeaderModerator from "./components/header/HeaderMod";
 import HeaderAdmin from "./components/header/HeaderAdmin";
 import DataView from "./pages/dataView/DataView";
+import EmailVerification from "./pages/EmailVerification";
 
 const App = () => {
     const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -155,6 +156,8 @@ const App = () => {
                     <Route path="/mod" element={<HeaderModerator />} />
                     <Route path="/admin" element={<HeaderAdmin />} />
                     <Route path="/dataView" element={<DataView />} />
+                    <Route path="*" element={<Home />} />
+                    <Route path="/verifyEmail" element={<EmailVerification />} />
                 </Routes>
             </div>
 

@@ -25,6 +25,17 @@ const login = (username, password) => {
         });
 };
 
+const verifyEmail = (token) => {
+    return api
+        .post("/auth/verifyEmail", {
+            token
+        })
+        .then((response) => {
+            console.log("Verify Email Response:", response);
+            return response.data;
+        });
+}
+
 const logout = () => {
     //merkürdig
     api
@@ -44,6 +55,7 @@ const getCurrentUser = () => {
 const AuthService = {
     register,
     login,
+    verifyEmail,
     logout,
     getCurrentUser,
 }
