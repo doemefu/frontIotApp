@@ -45,6 +45,9 @@ const Profile = () => {
             {/*
                 //TODO: Add Status and timestamps
             */}
+            <div className="forgot-password">
+                <Link to="/auth/resetPassword">Reset Password?</Link>
+            </div>
         </div>
     );
 };

@@ -47,6 +47,29 @@ const forgotPassword = (email) => {
         });
 }
 
+const resetPassword = (newPassword, oldPassword, token) => {
+    const payload = {
+        newPassword,
+    };
+
+    if (token) {
+        payload.token = token;
+    } else {
+        payload.oldPassword = oldPassword;
+    }
+
+    return api
+        .post("/user-management/resetPassword", payload)
+        .then((response) => {
+            console.log("Reset Password Response:", response);
+            return response;
+        })
+        .catch((error) => {
+            console.error("Reset Password Error:", error);
+            throw error;
+        });
+};
+
 const logout = () => {
     api
         .post("/auth/logout")
@@ -67,6 +90,7 @@ const AuthService = {
     login,
     verifyEmail,
     forgotPassword,
+    resetPassword,
     logout,
     getCurrentUser,
 }
