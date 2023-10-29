@@ -95,10 +95,7 @@ const Register = () => {
                 },
                 (error) => {
                     let resMessage = "Lokaler Fehler";
-                    if (error.response && error.response.headers) {
-                        resMessage = error.response.headers['responsemessage'];
-                        console.log(error.response.headers);
-                    } else {
+                    if (error.response){
                         resMessage =
                             (error.response
                                 && error.response.data

@@ -36,8 +36,18 @@ const verifyEmail = (token) => {
         });
 }
 
+const forgotPassword = (email) => {
+    return api
+        .post("/user-management/forgotPassword", {
+            email
+        })
+        .then((response) => {
+            console.log("forgotPassword Response:", response);
+            return response;
+        });
+}
+
 const logout = () => {
-    //merkürdig
     api
         .post("/auth/logout")
         .then((response) => {
@@ -56,6 +66,7 @@ const AuthService = {
     register,
     login,
     verifyEmail,
+    forgotPassword,
     logout,
     getCurrentUser,
 }
