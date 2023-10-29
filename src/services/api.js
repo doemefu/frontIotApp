@@ -10,7 +10,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
-        console.log("instance.interceptors.request.use fullfilled");
         const token = TokenService.getLocalAccessToken();
         if (token) {
             console.log("instance.interceptors.request.use fullfilled with token");
