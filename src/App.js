@@ -25,6 +25,7 @@ import EmailVerification from "./pages/EmailVerification";
 import {Dropdown} from "react-bootstrap";
 import ShowUsers from "./components/usermanagement/showUsers";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
     const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -173,6 +174,7 @@ const App = () => {
                     <Route path="/admin/showRoles" element={<DataView/>}/>
                     <Route path="/auth/verifyEmail" element={<EmailVerification/>}/>
                     <Route path="/auth/forgotPassword" element={<ForgotPassword/>}/>
+                    <Route path="/auth/resetPassword" element={<ResetPassword/>}/>
                     <Route path="/auth/resetPassword" element={<DataView/>}/>
                 </Routes>
             </div>

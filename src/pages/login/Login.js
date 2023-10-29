@@ -85,7 +85,7 @@ const Login = () => {
 
                 <Form onSubmit={onHandleSubmit} ref={form}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username or email</label>
                         <Input
                             type="text"
                             className="form-control"
