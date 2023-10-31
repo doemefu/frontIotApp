@@ -6,10 +6,8 @@ import {
 } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/App.css";
-import {LinkContainer} from 'react-router-bootstrap'; // You may need to install react-router-bootstrap
 
 import AuthService from "./services/auth.service";
-import AuthVerify from "./utils/AuthVerify";
 import EventBus from "./utils/EventBus";
 
 import Home from "./pages/home/index";
@@ -60,7 +58,7 @@ const App = () => {
         return () => {
             EventBus.remove("logout");
         };
-    }, []);  // Empty dependency array makes it run only once at mount
+    }, []);
 
     // For reacting to currentUser changes
     useEffect(() => {
