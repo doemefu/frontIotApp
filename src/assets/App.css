@@ -69,3 +69,42 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+.mobile-nav-menu {
+  display: flex; /* Standardmäßig ausgeblendet */
+  flex-direction: column;
+  position: absolute;
+  top: 60px; /* Positionierung anpassen */
+  right: 0; /* Positionierung anpassen */
+  background-color: #333; /* Hintergrundfarbe anpassen */
+  width: 150px; /* Breite anpassen */
+  z-index: 1;
+}
+
+.mobile-nav-menu-active {
+  display: flex; /* Angezeigt, wenn .mobile-nav-menu aktiv ist */
+  flex-direction: column;
+}
+
+.mobile-nav-icon {
+  cursor: pointer;
+  position: absolute; /* Positionierung auf 'absolute' ändern */
+  right: 10px; /* Positionierung ganz rechts */
+}
+
+.mobile-nav-icon-active + .mobile-nav-menu {
+  display: flex; /* Angezeigt, wenn .mobile-nav-icon aktiv ist */
+  flex-direction: column;
+}
+
+.mobile-nav-menu-active .nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.mobile-nav-menu-active .nav-link:hover {
+  background-color: #555;
+}
+
+
