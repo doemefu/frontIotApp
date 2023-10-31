@@ -16,7 +16,6 @@ const DataView = () => {
                 }
             })
                 .then(res => {
-                    // Preprocess the InfluxDB data
                     const preprocessedData = res.data.map(entry => ({
                         value: entry.value,
                         time: new Date(entry.time).toLocaleTimeString(), // You can format this as needed
