@@ -16,8 +16,6 @@ const login = (username, password) => {
             password,
         })
         .then((response) => {
-            //console.log("Login Response:", response);
-            //if (response.data.username) {
             if (response.data.accessToken) {
                 TokenService.setUser(response.data);
             }
@@ -25,8 +23,52 @@ const login = (username, password) => {
         });
 };
 
+const verifyEmail = (token) => {
+    return api
+        .post("/auth/verifyEmail", {
+            token
+        })
+        .then((response) => {
+            console.log("Verify Email Response:", response);
+            return response.data;
+        });
+}
+
+const forgotPassword = (email) => {
+    return api
+        .post("/user-management/forgotPassword", {
+            email
+        })
+        .then((response) => {
+            console.log("forgotPassword Response:", response);
+            return response;
+        });
+}
+
+const resetPassword = (newPassword, oldPassword, token) => {
+    const payload = {
+        newPassword,
+    };
+
+    if (token) {
+        payload.token = token;
+    } else {
+        payload.oldPassword = oldPassword;
+    }
+
+    return api
+        .post("/user-management/resetPassword", payload)
+        .then((response) => {
+            console.log("Reset Password Response:", response);
+            return response;
+        })
+        .catch((error) => {
+            console.error("Reset Password Error:", error);
+            throw error;
+        });
+};
+
 const logout = () => {
-    //merkürdig
     api
         .post("/auth/logout")
         .then((response) => {
@@ -44,6 +86,9 @@ const getCurrentUser = () => {
 const AuthService = {
     register,
     login,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
     logout,
     getCurrentUser,
 }
