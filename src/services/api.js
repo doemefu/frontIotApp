@@ -27,11 +27,12 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
+        console.log("interceptor 1: " + response);
         return response;
     },
     async (error) => {
         const originalConfig = error.config;
-
+        console.log("interceptor 2");
         if (originalConfig.url !== "/auth/login" && error.response) {
             // Access Token was expired
             if (error.response.status === 401 && !originalConfig._retry) {
@@ -42,8 +43,8 @@ instance.interceptors.response.use(
                         refreshToken: TokenService.getLocalRefreshToken(),
                     });
 
-                    const { newAccessToken } = axiosResponse.data;
-                    TokenService.updateLocalAccessToken(newAccessToken);
+                    const { accessToken } = axiosResponse.data;
+                    TokenService.updateLocalAccessToken(accessToken);
 
                     return instance(originalConfig);
                 } catch (_error) {
