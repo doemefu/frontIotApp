@@ -54,9 +54,7 @@ const Login = () => {
                 (error) => {
                     let resMessage = "Lokaler Fehler";
                     
-                    if (error.response.status === 401) {
-                        resMessage = "Invalid username or password";
-                    } else {
+                    if (error.response) {
                         resMessage =
                                 (error.response
                                     && error.response.data
