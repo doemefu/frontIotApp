@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -48,7 +48,6 @@ const Login = () => {
         if (checkBtn.current.context._errors.length === 0){
             AuthService.login(username, password).then(
                 () => {
-                    //comment out for debugging
                     navigate("/profile");
                     window.location.reload();
                 },
@@ -85,7 +84,7 @@ const Login = () => {
 
                 <Form onSubmit={onHandleSubmit} ref={form}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username or email</label>
                         <Input
                             type="text"
                             className="form-control"
@@ -126,6 +125,9 @@ const Login = () => {
                     )}
                     <CheckButton style={{ display: "none" }} ref={checkBtn} />
                 </Form>
+                <div className="forgot-password">
+                    <Link to="/auth/forgotPassword">Forgot Password?</Link>
+                </div>
             </div>
         </div>
     );

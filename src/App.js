@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/App.css";
 
 import AuthService from "./services/auth.service";
-import AuthVerify from "./utils/AuthVerify";
 import EventBus from "./utils/EventBus";
 
 import Home from "./pages/home/index";
@@ -16,6 +15,11 @@ import HeaderUser from "./components/header/HeaderUser";
 import HeaderModerator from "./components/header/HeaderMod";
 import HeaderAdmin from "./components/header/HeaderAdmin";
 import DataView from "./pages/dataView/DataView";
+import EmailVerification from "./pages/EmailVerification";
+import {Dropdown} from "react-bootstrap";
+import ShowUsers from "./components/usermanagement/showUsers";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import { useMediaQuery } from 'react-responsive';
 
@@ -55,7 +59,7 @@ const App = () => {
         return () => {
             EventBus.remove("logout");
         };
-    }, []);  // Empty dependency array makes it run only once at mount
+    }, []);
 
     // For reacting to currentUser changes
     useEffect(() => {
@@ -90,10 +94,18 @@ const App = () => {
                             )}
 
                             {showAdminBoard && (
-                                <li className="nav-item">
-                                    <Link to={"/admin"} className="nav-link">
-                                        Admin Board
-                                    </Link>
+                                <li className="nav-item dropdown">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="success" href="#" id="dropdown-basic">
+                                            Admin Stuff
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item href="/admin/showUsers">showUsers</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/showRoles">Another action</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/forgotPassword">Something else</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </li>
                             )}
 
@@ -154,6 +166,7 @@ const App = () => {
                             <Route path="/dataView" element={<DataView />} />
                         </Routes>
                     </div>
+
                 </div>
             )}
 
@@ -221,16 +234,23 @@ const App = () => {
             )}
             <div className="container mt-3">
                 <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/index" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/user" element={<HeaderUser />} />
-                    <Route path="/mod" element={<HeaderModerator />} />
-                    <Route path="/admin" element={<HeaderAdmin />} />
-                    <Route path="/dataView" element={<DataView />} />
+                    <Route path="*" element={<Home/>}/>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/index" element={<Home/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/profile" element={<Profile/>}/>
+                    <Route path="/user" element={<HeaderUser/>}/>
+                    <Route path="/mod" element={<HeaderModerator/>}/>
+                    <Route path="/admin" element={<HeaderAdmin/>}/>
+                    <Route path="/dataView" element={<DataView/>}/>
+                    <Route path="/admin/showUsers" element={<ShowUsers/>}/>
+                    <Route path="/admin/showRoles" element={<DataView/>}/>
+                    <Route path="/auth/verifyEmail" element={<EmailVerification/>}/>
+                    <Route path="/auth/forgotPassword" element={<ForgotPassword/>}/>
+                    <Route path="/auth/resetPassword" element={<ResetPassword/>}/>
+                    <Route path="/auth/resetPassword" element={<DataView/>}/>
                 </Routes>
             </div>
         </div>

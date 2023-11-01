@@ -1,6 +1,6 @@
 import React from "react";
 import AuthService from "../services/auth.service";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const currentUser = AuthService.getCurrentUser();
@@ -25,26 +25,32 @@ const Profile = () => {
                 <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
                 {currentUser.accessToken.substring(currentUser.accessToken.length - 20)}
             </p>
-            {/*
             <p>
-                <strong>Refresh-Token:</strong> {currentUser.refreshToken.substring(0, 20)} ...{" "}
-                {currentUser.refreshToken.substring(currentUser.refreshToken.length - 20)}
+                <strong>Refresh-Token:</strong> {currentUser.refreshToken}
             </p>
-            */}
             <p>
                 <strong>Id:</strong> {currentUser.id}
             </p>
             <p>
                 <strong>Email:</strong> {currentUser.email}
             </p>
+            <p>
+                <strong>User Status:</strong> {currentUser.userStatus ? currentUser.userStatus : "N/A"}
+            </p>
+            <p>
+                <strong>Created At:</strong> {currentUser.createdAt ? new Date(currentUser.createdAt).toLocaleString() : "N/A"}
+            </p>
+            <p>
+                <strong>Changed At:</strong> {currentUser.changedAt ? new Date(currentUser.changedAt).toLocaleString() : "N/A"}
+            </p>
             <strong>Authorities:</strong>
             <ul>
                 {currentUser.roles &&
                     currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
             </ul>
-            {/*
-                //TODO: Add Status and timestamps
-            */}
+            <div className="forgot-password">
+                <Link to="/auth/resetPassword">Reset Password?</Link>
+            </div>
         </div>
     );
 };
