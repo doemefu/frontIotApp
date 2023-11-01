@@ -84,8 +84,8 @@ const Register = () => {
         if (checkBtn.current.context._errors.length === 0){
             AuthService.register(username, email, password).then(
                 (response) => {
-                    setMessage(response.headers['responsemessage']);
-                    //setMessage(response.data.message);
+                    //setMessage(response.headers['responsemessage']);
+                    setMessage(response.data.message);
                     setSuccessful(true);
 
                     setTimeout(() => {
@@ -95,10 +95,7 @@ const Register = () => {
                 },
                 (error) => {
                     let resMessage = "Lokaler Fehler";
-                    if (error.response && error.response.headers) {
-                        resMessage = error.response.headers['responsemessage'];
-                        console.log(error.response.headers);
-                    } else {
+                    if (error.response){
                         resMessage =
                             (error.response
                                 && error.response.data

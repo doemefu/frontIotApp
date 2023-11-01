@@ -69,3 +69,52 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+.mobile-nav-menu {
+  display: flex; /* Standardmäßig ausgeblendet */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 60px; /* Positionierung anpassen */
+  right: 0; /* Positionierung anpassen */
+  background-color: #333; /* Hintergrundfarbe anpassen */
+  width: 150px; /* Breite anpassen */
+  z-index: 1;
+}
+
+.mobile-nav-menu-active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Horizontal zentrieren */
+  align-items: center; /* Vertikal zentrieren, falls erforderlich */
+}
+
+
+.mobile-nav-icon {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.mobile-nav-icon-active + .mobile-nav-menu {
+  display: flex; /* Angezeigt, wenn .mobile-nav-icon aktiv ist */
+  flex-direction: column;
+}
+
+.mobile-nav-menu-active .nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.mobile-nav-menu-active .nav-link:hover {
+  background-color: #555;
+}
+
+#dropdown-basic  {
+  background-color: cornflowerblue;
+}
+
+
