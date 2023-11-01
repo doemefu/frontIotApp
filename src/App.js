@@ -152,21 +152,6 @@ const App = () => {
                             </div>
                         )}
                     </nav>
-                    <div className="container mt-3">
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/home" element={<Home />} />
-                            <Route path="/index" element={<Home />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/profile" element={<Profile />} />
-                            <Route path="/user" element={<HeaderUser />} />
-                            <Route path="/mod" element={<HeaderModerator />} />
-                            <Route path="/admin" element={<HeaderAdmin />} />
-                            <Route path="/dataView" element={<DataView />} />
-                        </Routes>
-                    </div>
-
                 </div>
             )}
 
@@ -176,10 +161,10 @@ const App = () => {
                         IoT-App
                     </Link>
                     <div>
-                        <img src="assets/hamburger.png" alt="hamburger icon" width="40" height="40" className="mobile-nav-icon" onClick={() => setMobileNavOpen(!mobileNavOpen)}></img>
+                        <img src="/hamburger.png" alt="hamburger icon" width="40" height="40" className="mobile-nav-icon" onClick={() => setMobileNavOpen(!mobileNavOpen)} />
                     </div>
                     {mobileNavOpen && (
-                        <div className="mobile-nav-menu-active">
+                        <div className="mobile-nav-menu-active d-flex justify-content-center align-items-center">
                             <Link to={"/home"} className="nav-link">
                                 Home
                             </Link>
@@ -189,9 +174,19 @@ const App = () => {
                                 </Link>
                             )}
                             {showAdminBoard && (
-                                <Link to={"/admin"} className="nav-link">
-                                    Admin Board
-                                </Link>
+                                <li className="nav-item dropdown">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="success" href="#" id="dropdown-basic">
+                                            Admin Stuff
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item href="/admin/showUsers">showUsers</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/showRoles">Another action</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/forgotPassword">Something else</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </li>
                             )}
                             {currentUser && (
                                 <Link to={"/user"} className="nav-link">
@@ -217,15 +212,11 @@ const App = () => {
                                     Login
                                 </Link>
                             )}
-                            {currentUser ? (
-                                <Link className="nav-link" onClick={logOut} to={"/home"}>
-                                    LogOut
-                                </Link>
-                            ) : (
-                                <Link to={"/register"} className="nav-link">
+                            {!currentUser ? (
+                                <Link to="/register" className="nav-link">
                                     Register
                                 </Link>
-                            )}
+                            ) : null}
                         </div>
                     )}
                 </div>
