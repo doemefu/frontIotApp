@@ -1,9 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {
-    Routes,
-    Route,
-    Link
-} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/App.css";
 
@@ -25,10 +21,15 @@ import ShowUsers from "./components/usermanagement/showUsers";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
+import { useMediaQuery } from 'react-responsive';
+
 const App = () => {
+    const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1224px)' });
+    const isTabletOrMobile = useMediaQuery({ maxWidth: 1224 });
     const [showModeratorBoard, setShowModeratorBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
     const [currentUser, setCurrentUser] = useState(undefined);
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
     const logOut = () => {
         AuthService.logout();
@@ -70,91 +71,167 @@ const App = () => {
 
     return (
         <div>
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
-                <Link to={"/"} className="navbar-brand">
-                    IoT-App
-                </Link>
-                <div className="navbar-nav mr-auto">
-                    <li className="nav-item">
-                        <Link to={"/home"} className="nav-link">
-                            Home
+            {isDesktopOrLaptop && (
+                <div>
+                    {/* Desktop-Ansicht */}
+                    <nav className="navbar navbar-expand navbar-dark bg-dark">
+                        <Link to={"/"} className="navbar-brand">
+                            IoT-App
                         </Link>
-                    </li>
+                        <div className="navbar-nav mr-auto">
+                            <li className="nav-item">
+                                <Link to={"/home"} className="nav-link">
+                                    Home
+                                </Link>
+                            </li>
 
-                    {showModeratorBoard && (
-                        <li className="nav-item">
-                            <Link to={"/mod"} className="nav-link">
-                                Moderator Board
+                            {showModeratorBoard && (
+                                <li className="nav-item">
+                                    <Link to={"/mod"} className="nav-link">
+                                        Moderator Board
+                                    </Link>
+                                </li>
+                            )}
+
+                            {showAdminBoard && (
+                                <li className="nav-item dropdown">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="success" href="#" id="dropdown-basic">
+                                            Admin Stuff
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item href="/admin/showUsers">showUsers</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/showRoles">Another action</Dropdown.Item>
+                                            <Dropdown.Item href="/admin/forgotPassword">Something else</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </li>
+                            )}
+
+                            {currentUser && (
+                                <li className="nav-item">
+                                    <Link to={"/user"} className="nav-link">
+                                        User
+                                    </Link>
+                                </li>
+                            )}
+                        </div>
+
+                        {currentUser ? (
+                            <div className="navbar-nav ml-auto">
+                                <li className="nav-item">
+                                    <Link to={"/dataView"} className="nav-link">
+                                        Data View
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to={"/profile"} className="nav-link">
+                                        {currentUser.username}
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" onClick={logOut} to={"/home"}>
+                                        LogOut
+                                    </Link>
+                                </li>
+                            </div>
+                        ) : (
+                            <div className="navbar-nav ml-auto">
+                                <li className="nav-item">
+                                    <Link to={"/login"} className="nav-link">
+                                        Login
+                                    </Link>
+                                </li>
+
+                                <li className="nav-item">
+                                    <Link to={"/register"} className="nav-link">
+                                        Register
+                                    </Link>
+                                </li>
+                            </div>
+                        )}
+                    </nav>
+                    <div className="container mt-3">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/index" element={<Home />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/user" element={<HeaderUser />} />
+                            <Route path="/mod" element={<HeaderModerator />} />
+                            <Route path="/admin" element={<HeaderAdmin />} />
+                            <Route path="/dataView" element={<DataView />} />
+                        </Routes>
+                    </div>
+
+                </div>
+            )}
+
+            {isTabletOrMobile && (
+                <div className="navbar navbar-expand navbar-dark bg-dark">
+                    <Link to={"/"} className="navbar-brand">
+                        IoT-App
+                    </Link>
+                    <div>
+                        <img src="assets/hamburger.png" alt="hamburger icon" width="40" height="40" className="mobile-nav-icon" onClick={() => setMobileNavOpen(!mobileNavOpen)}></img>
+                    </div>
+                    {mobileNavOpen && (
+                        <div className="mobile-nav-menu-active">
+                            <Link to={"/home"} className="nav-link">
+                                Home
                             </Link>
-                        </li>
-                    )}
-
-                    {showAdminBoard && (
-                        <li className="nav-item dropdown">
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" href="#" id="dropdown-basic">
-                                    Admin Stuff
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item href="/admin/showUsers">showUsers</Dropdown.Item>
-                                    <Dropdown.Item href="/admin/showRoles">Another action</Dropdown.Item>
-                                    <Dropdown.Item href="/admin/forgotPassword">Something else</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </li>
-                    )}
-
-                    {currentUser && (
-                        <li className="nav-item">
-                            <Link to={"/user"} className="nav-link">
-                                User
-                            </Link>
-                        </li>
+                            {showModeratorBoard && (
+                                <Link to={"/mod"} className="nav-link">
+                                    Moderator Board
+                                </Link>
+                            )}
+                            {showAdminBoard && (
+                                <Link to={"/admin"} className="nav-link">
+                                    Admin Board
+                                </Link>
+                            )}
+                            {currentUser && (
+                                <Link to={"/user"} className="nav-link">
+                                    User
+                                </Link>
+                            )}
+                            {currentUser && (
+                                <Link to={"/dataView"} className="nav-link">
+                                    Data View
+                                </Link>
+                            )}
+                            {currentUser && (
+                                <Link to={"/profile"} className="nav-link">
+                                    {currentUser.username}
+                                </Link>
+                            )}
+                            {currentUser ? (
+                                <Link className="nav-link" onClick={logOut} to={"/home"}>
+                                    LogOut
+                                </Link>
+                            ) : (
+                                <Link to={"/login"} className="nav-link">
+                                    Login
+                                </Link>
+                            )}
+                            {currentUser ? (
+                                <Link className="nav-link" onClick={logOut} to={"/home"}>
+                                    LogOut
+                                </Link>
+                            ) : (
+                                <Link to={"/register"} className="nav-link">
+                                    Register
+                                </Link>
+                            )}
+                        </div>
                     )}
                 </div>
 
-                {currentUser ? (
-                    <div className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <Link to={"/dataView"} className="nav-link">
-                                Data View
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={"/profile"} className="nav-link">
-                                {currentUser.username}
-                            </Link>
-                        </li>
-                        <li className="nav-item">
 
-                            <Link className="nav-link" onClick={logOut} to={"/home"}>
-                                LogOut
-                            </Link>
-                            {/*
-                            <a  className="nav-link" onClick={logOut}>
-                                LogOut
-                            </a>
-                             */}
-                        </li>
-                    </div>
-                ) : (
-                    <div className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <Link to={"/login"} className="nav-link">
-                                Login
-                            </Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link to={"/register"} className="nav-link">
-                                Register
-                            </Link>
-                        </li>
-                    </div>
-                )}
-            </nav>
-
+            )}
             <div className="container mt-3">
                 <Routes>
                     <Route path="*" element={<Home/>}/>
@@ -176,8 +253,6 @@ const App = () => {
                     <Route path="/auth/resetPassword" element={<DataView/>}/>
                 </Routes>
             </div>
-
-            {/* <AuthVerify logOut={logOut}/> */}
         </div>
     );
 };
