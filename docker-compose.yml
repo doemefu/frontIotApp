@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: iot-app:front
+    ports:
+      - "33:33"
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"  # HTTP
+      - "443:443"  # HTTPS
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Correct path for Nginx config :ro for read only
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      #- ./cert.pem:/etc/nginx/cert.pem:ro  # Correct path for SSL certificate
+      #- ./key.pem:/etc/nginx/key.pem:ro  # Correct path for SSL key
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw # read-write to same volume as nginx
+      - ./certbot/conf/:/etc/letsencrypt/:rw
