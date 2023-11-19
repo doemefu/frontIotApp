@@ -1,81 +1,97 @@
-# IOT-App Frontend
-
-Folder structure according to [this](https://blog.webdevsimplified.com/2022-07/react-folder-structure/) article.
-
-## Important
-
-in package.json:
-- for HTTPS: `"start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",`
-- for HTTP `"start": "react-scripts start",`
+<h1> IOT-App Frontend </h1>
 
 
-# Getting Started with Create React App
+<!-- TOC -->
+* [Deployment to Raspberry Pi 3](#deployment-to-raspberry-pi-3)
+  * [Prerequisites](#prerequisites)
+  * [Network](#network)
+  * [Frontend](#frontend)
+  * [File transfer](#file-transfer)
+    * [SCP](#scp)
+    * [Docker-SSH](#docker-ssh)
+* [Notes](#notes)
+<!-- TOC -->
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# Deployment to Raspberry Pi 3
 
-In the project directory, you can run:
+## Prerequisites
 
-### `npm start`
+- Docker installed on Raspberry Pi 3
+- Docker installed on local machine
+- SSH connection to Raspberry Pi 3
+- Portforwarding on router
+  - Port 80 to Raspberry Pi 3 (HTTP)
+  - Port 443 to Raspberry Pi 3 (HTTPS)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Network
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Nginx is used as a reverse proxy to route the traffic to the correct container.
+```docker-compose
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"  # HTTP
+      - "443:443"  # HTTPS
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Correct path for Nginx config :ro for read only
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+```
 
-### `npm test`
+### Certbot
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Certbot is used to generate the SSL certificates for HTTPS.
+```docker-compose
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw # read-write to same volume as nginx
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+      ```
 
-### `npm run build`
+## Frontend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Runs on the Raspberry Pi 3 in a Docker container with port 33 exposed.
+```docker-compose
+  app:
+    image: iot-app:front
+    ports:
+      - "33:33"
+    restart: always
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## File transfer
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### SCP
+1. **Download the image from Docker.** </br>
+   ```docker save -o <path for generated tar file> <image name>``` </br>
 
-### `npm run eject`
+2. **Copy the image to the remote host.** </br>
+   ```scp <path for generated tar file> username@remote-host:<path for remote directory>``` </br>
+   ```scp -P 22 front-iot-image dfurchert@192.168.1.156:/home/dfurchert/frontIotApp nginx.conf```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+3. **Load the image.** </br>
+   ```docker load -i <path to image tar file>``` </br>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Docker-SSH
+1. **Re-direct to remote environment.** </br>
+```export DOCKER_HOST="ssh://username@remote-host"```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. *OPTIONAL: Run a container. </br>
+To prove that we are on remote-host, this will print its hostname.** </br>
+```docker run --rm --net host busybox hostname -f```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Build the image from current directory** </br>
+```docker build -t iot-app-frontend .```
 
-## Learn More
+4. **Switch back to your local environment.** </br>
+```unset DOCKER_HOST```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Notes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Folder structure according to [this](https://blog.webdevsimplified.com/2022-07/react-folder-structure/) article.
+- **For local HTTPS only** in package.json:
+    - for HTTPS: `"start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",`
+    - for HTTP `"start": "react-scripts start",`
