@@ -1,0 +1,27 @@
+events {}
+
+http {
+    server {
+        listen 3030 ssl default_server;
+        server_name 192.168.1.156;  # Replace with your Raspberry Pi's IP address
+
+        ssl_certificate cert.pem;  # Path to your SSL certificate
+        ssl_certificate_key key.pem;  # Path to your SSL key
+
+        location / {
+            proxy_pass http://172.18.0.2:33;  # Forward requests to the React app
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+
+    # Optional: Redirect HTTP to HTTPS
+    server {
+        listen 80;
+        server_name 192.168.1.156;
+        return 301 https://$host$request_uri;
+    }
+}
