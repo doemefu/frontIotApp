@@ -19,6 +19,7 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
       #- ./cert.pem:/etc/nginx/cert.pem:ro  # Correct path for SSL certificate
       #- ./key.pem:/etc/nginx/key.pem:ro  # Correct path for SSL key
+
   certbot:
     image: certbot/certbot:latest
     volumes:
