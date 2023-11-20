@@ -10,7 +10,8 @@ const DataView = () => {
 
     useEffect(() => {
         if (currentUser) {
-            axios.get('http://localhost:8080/api/data/influxData', {
+            //axios.get('http://localhost:8080/api/data/influxData', {
+            axios.get('https://iot-app-backend.azurewebsites.net/api/data/influxData', {
                 headers: {
                     'Authorization': `Bearer ${currentUser.accessToken}`
                 }
