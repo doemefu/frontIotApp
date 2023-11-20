@@ -218,7 +218,7 @@ To prove that we are on remote-host, this will print its hostname.
 
 2. **Renew the certificates.**
     ```bash
-    docker-compose -f exec nginx nginx -s reload
+    docker-compose -f run --rm certbot
     ```   
 
 ## Troubleshooting
