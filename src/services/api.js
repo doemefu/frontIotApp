@@ -2,11 +2,13 @@ import axios from "axios";
 import TokenService from "./token.service";
 
 const instance = axios.create({
-//    baseURL: "http://localhost:8080/api",
-    baseURL: "https://iot-app-backend.azurewebsites.net/api",
+    baseURL: "https://furchert.ch/api",
+    //baseURL: "http://backend:8080/api",
+    //baseURL: "https://iot-app-backend.azurewebsites.net/api",
     headers: {
         "Content-Type": "application/json",
     },
+    withCredentials: true,
 });
 
 instance.interceptors.request.use(

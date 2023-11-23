@@ -138,10 +138,6 @@ Transfer of other files like the `nginx.conf` or the `certbot` folder can be don
     scp -P 22 /Users/dfurchert/Desktop/front-iot-image dfurchert@192.168.1.156:/home/dfurchert/frontIotApp front-iot-image
     ```
 
-4. **Load the image.** </br>
-   ```bash 
-   docker load -i /home/dfurchert/frontIotApp/front-iot-image
-   ```
 
 ### Docker-SSH
 
@@ -168,7 +164,12 @@ To prove that we are on remote-host, this will print its hostname.
 
 ## Run
 
-1. **Restart the containers.**
+1. **Load the image.** </br>
+   ```bash 
+   docker load -i /home/dfurchert/frontIotApp/front-iot-image
+   ```
+
+2. **Restart the containers.**
     ```bash
     docker-compose restart
     ```
