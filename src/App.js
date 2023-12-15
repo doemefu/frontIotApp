@@ -69,6 +69,19 @@ const App = () => {
         }
     }, [currentUser]);
 
+    // For requesting storage access eg. for cookies
+    useEffect(() => {
+        document.requestStorageAccess().then(
+            () => {
+                console.log("access granted");
+            },
+            () => {
+                console.log("access denied");
+            }
+        );
+    }, []);
+
+
     return (
         <div>
             {isDesktopOrLaptop && (
