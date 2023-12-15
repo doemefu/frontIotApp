@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AuthService from "../../services/auth.service";
 import { Link } from "react-router-dom";
 import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-import axios from "axios";
+import api from "../../services/api";
 
 const DataView = () => {
     const currentUser = AuthService.getCurrentUser();
@@ -10,12 +10,14 @@ const DataView = () => {
 
     useEffect(() => {
         if (currentUser) {
-            //axios.get('http://localhost:8080/api/data/influxData', {
-            axios.get('https://iot-app-backend.azurewebsites.net/api/data/influxData', {
-                headers: {
-                    'Authorization': `Bearer ${currentUser.accessToken}`
-                }
-            })
+            //axios.get('https://furchert.ch/api/data/influxData', {
+            //axios.get('https://iot-app-backend.azurewebsites.net/api/data/influxData', {
+            api
+                .get('data/influxData', {
+                //headers: {
+                //    'Authorization': `Bearer ${currentUser.accessToken}`
+                //}
+                })
                 .then(res => {
                     const preprocessedData = res.data.map(entry => ({
                         value: entry.value,
