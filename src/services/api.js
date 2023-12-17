@@ -13,13 +13,15 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
+        /*
         const token = TokenService.getLocalAccessToken();
         if (token) {
             console.log("instance.interceptors.request.use fullfilled with token");
             config.headers["Authorization"] = 'Bearer ' + token;
         }else {
         console.log("instance.interceptors.request.use fullfilled without token");
-        }
+        }*/
+
         return config;
     },
     (error) => {
@@ -43,11 +45,11 @@ instance.interceptors.response.use(
 
                 try {
                     const axiosResponse = await instance.post("/auth/refreshtoken", {
-                        refreshToken: TokenService.getLocalRefreshToken(),
+                        //refreshToken: TokenService.getLocalRefreshToken(),
                     });
 
-                    const { accessToken } = axiosResponse.data;
-                    TokenService.updateLocalAccessToken(accessToken);
+                    //const { accessToken } = axiosResponse.data;
+                    //TokenService.updateLocalAccessToken(accessToken);
 
                     return instance(originalConfig);
                 } catch (_error) {

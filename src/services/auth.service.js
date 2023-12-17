@@ -16,7 +16,8 @@ const login = (username, password) => {
             password,
         })
         .then((response) => {
-            if (response.data.accessToken) {
+            //if (response.data.accessToken) { //non Cookie variant
+            if (response.data) { //Cookie variant
                 TokenService.setUser(response.data);
             }
             return response.data;
