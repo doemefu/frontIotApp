@@ -70,13 +70,14 @@ const resetPassword = (newPassword, oldPassword, token) => {
 };
 
 const logout = () => {
-    api
+    return api
         .post("/auth/logout")
         .then((response) => {
             console.log("Logout Response:", response);
-            //return response.data;
-            //await response
             TokenService.removeUser();
+        })
+        .catch((error) => {
+            console.error("Logout Error:", error);
         });
 };
 

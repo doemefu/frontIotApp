@@ -7,22 +7,18 @@ import api from "../../services/api";
 const DataView = () => {
     const currentUser = AuthService.getCurrentUser();
     const [data, setData] = useState([]);
+    const [selectedDevice, setSelectedDevice] = useState('both');
 
     useEffect(() => {
         if (currentUser) {
-            //axios.get('https://furchert.ch/api/data/influxData', {
-            //axios.get('https://iot-app-backend.azurewebsites.net/api/data/influxData', {
             api
-                .get('data/influxData', {
-                //headers: {
-                //    'Authorization': `Bearer ${currentUser.accessToken}`
-                //}
-                })
+                .get('data/influxDataNew', {})
                 .then(res => {
                     const preprocessedData = res.data.map(entry => ({
-                        value: entry.value,
-                        time: new Date(entry.time).toLocaleTimeString(), // You can format this as needed
-                        field: entry.field,
+                        value: entry._value,
+                        time: new Date(entry._time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        field: entry._field,
+                        device: entry.device
                     }));
                     setData(preprocessedData);
                 })
@@ -39,8 +35,11 @@ const DataView = () => {
             </div>
         );
     }
-    const humidityData = data.filter(d => d.field === 'Humidity');
-    const temperatureData = data.filter(d => d.field === 'Temperature');
+    const terra1HumidityData = data.filter(d => d.field === 'Humidity' && d.device === 'terra1');
+    const terra1TemperatureData = data.filter(d => d.field === 'Temperature' && d.device === 'terra1');
+    const terra2HumidityData = data.filter(d => d.field === 'Humidity' && d.device === 'terra2');
+    const terra2TemperatureData = data.filter(d => d.field === 'Temperature' && d.device === 'terra2');
+
 
     return (
         <div className="container">
@@ -50,16 +49,46 @@ const DataView = () => {
                 </h3>
             </header>
             <ResponsiveContainer width="100%" height={300}>
-                <LineChart width={1200} height={300} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                    <Line type="monotone" dataKey="value" data={humidityData} stroke="#8884d8" name="Humidity" />
-                    <Line type="monotone" dataKey="value" data={temperatureData} stroke="#82ca9d" name="Temperature" />
-                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                    <YAxis dataKey="value" />
+                <LineChart width={1200} height={300} margin={{top: 5, right: 20, bottom: 5, left: 0}}>
+                    { (selectedDevice === 'terra1' || selectedDevice === 'both') && (
+                        <>
+                            <Line type="monotone" dataKey="value" data={terra1HumidityData} stroke="#8884d8" name="Terra1 Humidity" />
+                            <Line type="monotone" dataKey="value" data={terra1TemperatureData} stroke="#82ca9d" name="Terra1 Temperature" />
+                        </>
+                    )}
+                    { (selectedDevice === 'terra2' || selectedDevice === 'both') && (
+                        <>
+                            <Line type="monotone" dataKey="value" data={terra2HumidityData} stroke="#ffc658" name="Terra2 Humidity" />
+                            <Line type="monotone" dataKey="value" data={terra2TemperatureData} stroke="#ff7300" name="Terra2 Temperature" />
+                        </>
+                    )}
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+                    <YAxis dataKey="value"/>
                     <XAxis dataKey="time" type={"category"} allowDuplicatedCategory={false} interval={4}/>
-                    <Legend />
-                    <Tooltip />
+                    <Legend/>
+                    <Tooltip/>
                 </LineChart>
             </ResponsiveContainer>
+            <div>
+                <input
+                    type="radio"
+                    value="terra1"
+                    checked={selectedDevice === 'terra1'}
+                    onChange={(e) => setSelectedDevice(e.target.value)}
+                /> Terra1
+                <input
+                    type="radio"
+                    value="terra2"
+                    checked={selectedDevice === 'terra2'}
+                    onChange={(e) => setSelectedDevice(e.target.value)}
+                /> Terra2
+                <input
+                    type="radio"
+                    value="both"
+                    checked={selectedDevice === 'both'}
+                    onChange={(e) => setSelectedDevice(e.target.value)}
+                /> Beide
+            </div>
         </div>
     );
 };
