@@ -16,7 +16,8 @@ const login = (username, password) => {
             password,
         })
         .then((response) => {
-            if (response.data.accessToken) {
+            //if (response.data.accessToken) { //non Cookie variant
+            if (response.data) { //Cookie variant
                 TokenService.setUser(response.data);
             }
             return response.data;
@@ -69,13 +70,14 @@ const resetPassword = (newPassword, oldPassword, token) => {
 };
 
 const logout = () => {
-    api
+    return api
         .post("/auth/logout")
         .then((response) => {
             console.log("Logout Response:", response);
-            //return response.data;
-            //await response
             TokenService.removeUser();
+        })
+        .catch((error) => {
+            console.error("Logout Error:", error);
         });
 };
 
