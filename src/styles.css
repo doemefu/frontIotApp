@@ -1,27 +1,27 @@
-.button-loading {
+.status-loading {
     background-color: orange;
 }
 
-.button-on {
+.status-on {
     background-color: green;
 }
 
-.button-off {
+.status-off {
     background-color: red;
 }
 
-.button-loading:hover,
-.button-loading:focus {
+.status-loading:hover,
+.status-loading:focus {
     background-color: #ffdeaf;
 }
 
-.button-on:hover,
-.button-on:focus {
+.status-on:hover,
+.status-on:focus {
     background-color: #a8e3a8;
 }
 
-.button-off:hover,
-.button-off:focus{
+.status-off:hover,
+.status-off:focus{
     background-color: #ffadad;
 }
 
