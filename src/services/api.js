@@ -2,22 +2,26 @@ import axios from "axios";
 import TokenService from "./token.service";
 
 const instance = axios.create({
-//    baseURL: "http://localhost:8080/api",
-    baseURL: "https://iot-app-backend.azurewebsites.net/api",
+    baseURL: "https://furchert.ch/api",
+    //baseURL: "http://backend:8080/api",
+    //baseURL: "https://iot-app-backend.azurewebsites.net/api",
     headers: {
         "Content-Type": "application/json",
     },
+    withCredentials: true,
 });
 
 instance.interceptors.request.use(
     (config) => {
+        /*
         const token = TokenService.getLocalAccessToken();
         if (token) {
             console.log("instance.interceptors.request.use fullfilled with token");
             config.headers["Authorization"] = 'Bearer ' + token;
         }else {
         console.log("instance.interceptors.request.use fullfilled without token");
-        }
+        }*/
+
         return config;
     },
     (error) => {
@@ -41,11 +45,11 @@ instance.interceptors.response.use(
 
                 try {
                     const axiosResponse = await instance.post("/auth/refreshtoken", {
-                        refreshToken: TokenService.getLocalRefreshToken(),
+                        //refreshToken: TokenService.getLocalRefreshToken(),
                     });
 
-                    const { accessToken } = axiosResponse.data;
-                    TokenService.updateLocalAccessToken(accessToken);
+                    //const { accessToken } = axiosResponse.data;
+                    //TokenService.updateLocalAccessToken(accessToken);
 
                     return instance(originalConfig);
                 } catch (_error) {

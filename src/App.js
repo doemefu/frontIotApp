@@ -22,6 +22,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 import { useMediaQuery } from 'react-responsive';
+import NewDataView from "./pages/dataView/NewDataView";
+import TerrariumDashboard from "./pages/TerrariumDashboard";
 
 const App = () => {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1224px)' });
@@ -32,11 +34,15 @@ const App = () => {
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
     const logOut = () => {
-        AuthService.logout();
-        setShowModeratorBoard(false);
-        setShowAdminBoard(false);
-        setCurrentUser(undefined);
+        AuthService.logout().then(() => {
+            setShowModeratorBoard(false);
+            setShowAdminBoard(false);
+            setCurrentUser(undefined);
+        }).catch(error => {
+            console.error("Logout failed:", error);
+        });
     };
+
 
     // For mounting and initial setting
     useEffect(() => {
@@ -68,6 +74,19 @@ const App = () => {
             setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
         }
     }, [currentUser]);
+
+    // For requesting storage access eg. for cookies
+    useEffect(() => {
+        document.requestStorageAccess().then(
+            () => {
+                console.log("access granted");
+            },
+            () => {
+                console.log("access denied");
+            }
+        );
+    }, []);
+
 
     return (
         <div>
@@ -120,10 +139,24 @@ const App = () => {
 
                         {currentUser ? (
                             <div className="navbar-nav ml-auto">
+                                {/*
+                                <li className="nav-item">
+                                    <Link to={"/oldDataView"} className="nav-link">
+                                        Old Data View
+                                    </Link>
+                                </li>
+                                */}
                                 <li className="nav-item">
                                     <Link to={"/dataView"} className="nav-link">
                                         Data View
                                     </Link>
+                                </li>
+                                <li className="nav-item">
+                                    {currentUser && (
+                                        <Link to={"/terrariumDashboard"} className="nav-link">
+                                            Terra Dashboard
+                                        </Link>
+                                    )}
                                 </li>
                                 <li className="nav-item">
                                     <Link to={"/profile"} className="nav-link">
@@ -140,7 +173,7 @@ const App = () => {
                             <div className="navbar-nav ml-auto">
                                 <li className="nav-item">
                                     <Link to={"/login"} className="nav-link">
-                                        Login
+                                    Login
                                     </Link>
                                 </li>
 
@@ -193,9 +226,21 @@ const App = () => {
                                     User
                                 </Link>
                             )}
+                            {/*
+                            {currentUser && (
+                                <Link to={"/oldOataView"} className="nav-link">
+                                    Old Data View
+                                </Link>
+                            )}
+                            */}
                             {currentUser && (
                                 <Link to={"/dataView"} className="nav-link">
                                     Data View
+                                </Link>
+                            )}
+                            {currentUser && (
+                                <Link to={"/terrariumDashboard"} className="nav-link">
+                                    Terra Dashboard
                                 </Link>
                             )}
                             {currentUser && (
@@ -235,7 +280,9 @@ const App = () => {
                     <Route path="/user" element={<HeaderUser/>}/>
                     <Route path="/mod" element={<HeaderModerator/>}/>
                     <Route path="/admin" element={<HeaderAdmin/>}/>
-                    <Route path="/dataView" element={<DataView/>}/>
+                    <Route path="/oldDdataView" element={<DataView/>}/>
+                    <Route path="/dataView" element={<NewDataView/>}/>
+                    <Route path="/terrariumDashboard" element={<TerrariumDashboard/>}/>
                     <Route path="/admin/showUsers" element={<ShowUsers/>}/>
                     <Route path="/admin/showRoles" element={<DataView/>}/>
                     <Route path="/auth/verifyEmail" element={<EmailVerification/>}/>

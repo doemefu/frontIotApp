@@ -1,0 +1,52 @@
+.status-loading {
+    background-color: orange;
+}
+
+.status-on {
+    background-color: green;
+}
+
+.status-off {
+    background-color: red;
+}
+
+.status-loading:hover,
+.status-loading:focus {
+    background-color: #ffdeaf;
+}
+
+.status-on:hover,
+.status-on:focus {
+    background-color: #a8e3a8;
+}
+
+.status-off:hover,
+.status-off:focus{
+    background-color: #ffadad;
+}
+
+.button {
+    color: white;
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}

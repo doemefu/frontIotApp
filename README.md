@@ -130,18 +130,19 @@ Transfer of other files like the `nginx.conf` or the `certbot` folder can be don
 
 2. **Download the image from Docker.** </br>
    ```bash
-    docker save -o /Users/dfurchert/Desktop/front-iot-image iot-app:front
+    docker save -o /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image iot-app:front
    ```
 
 3. **Copy the image to the remote host.** </br>
    ```bash
-    scp -P 22 /Users/dfurchert/Desktop/front-iot-image dfurchert@192.168.1.156:/home/dfurchert/frontIotApp front-iot-image
+    scp -P 22 /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image dfurchert@192.168.1.163:/home/dfurchert/iotApp/front-iot-image
     ```
-
-4. **Load the image.** </br>
-   ```bash 
-   docker load -i /home/dfurchert/frontIotApp/front-iot-image
-   ```
+Kombiniert:
+```bash
+docker build -t iot-app:front . &&
+docker save -o /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image iot-app:front &&
+scp -P 22 /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image dfurchert@192.168.1.163:/home/dfurchert/iotApp/front-iot-image
+```
 
 ### Docker-SSH
 
@@ -168,7 +169,12 @@ To prove that we are on remote-host, this will print its hostname.
 
 ## Run
 
-1. **Restart the containers.**
+1. **Load the image.** </br>
+   ```bash 
+   docker load -i /home/dfurchert/frontIotApp/front-iot-image
+   ```
+
+2. **Restart the containers.**
     ```bash
     docker-compose restart
     ```
