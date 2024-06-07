@@ -139,8 +139,8 @@ Transfer of other files like the `nginx.conf` or the `certbot` folder can be don
     ```
 Kombiniert:
 ```bash
-docker build -t iot-app:front . &&
-docker save -o /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image iot-app:front &&
+docker build -t iot-app:front .
+docker save -o /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image iot-app:front
 scp -P 22 /Users/dfurchert/Documents/informatik/Terrarium/orchestrationIotApp/front-iot-image dfurchert@192.168.1.163:/home/dfurchert/iotApp/front-iot-image
 ```
 
