@@ -25,7 +25,7 @@ jobs:
         run: docker buildx build --platform linux/arm64 -t iot-app:front --load .
 
       - name: Save Docker Image
-        run: docker save -o front-iot-image iot-app:front
+        run: docker save -o front-iot-image-automated iot-app:front
 
 
   transfer:
@@ -76,7 +76,7 @@ jobs:
           script: |
             cd iotApp/
             docker rmi iot-app:front || true
-            docker load -i front-iot-image
+            docker load -i front-iot-image-automated
 
       - name: Start Docker Compose
         uses: appleboy/ssh-action@master
@@ -87,7 +87,7 @@ jobs:
           port: ${{ secrets.RPI_PORT }}
           script: |
             cd iotApp/
-            docker-compose up -d
+            docker compose up -d
 
       - name: Wait for Services to Stabilize
         uses: appleboy/ssh-action@master
@@ -107,4 +107,4 @@ jobs:
           port: ${{ secrets.RPI_PORT }}
           script: |
             cd iotApp/
-            docker-compose restart
+            docker compose restart
