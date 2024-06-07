@@ -27,6 +27,12 @@ jobs:
       - name: Save Docker Image
         run: docker save -o front-iot-image-automated iot-app:front
 
+      - name: Upload Docker image as Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: front-iot-image-automated
+          path: ./front-iot-image-automated
+          overwrite: true
 
   transfer:
     needs: build-and-save
@@ -36,6 +42,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@main
+
+      - uses: actions/download-artifact@main
+        with:
+          name: back-iot-image-automated
 
       - name: Copy image to Raspberry Pi
         uses: appleboy/scp-action@master
