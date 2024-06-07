@@ -42,7 +42,7 @@ jobs:
         with:
           host: ${{ secrets.RPI_HOST }}
           username: ${{ secrets.RPI_USERNAME }}
-          key: ${{ secrets.RPI_SAY_KEY }}
+          key: ${{ secrets.RPI_SSH_KEY }}
           port: ${{ secrets.RPI_PORT }}
           source: "."
           target: "/home/dfurchert/iotApp/"
