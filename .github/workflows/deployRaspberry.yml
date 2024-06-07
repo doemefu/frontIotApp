@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.RPI_USERNAME }}
           key: ${{ secrets.RPI_SSH_KEY }}
           port: ${{ secrets.RPI_PORT }}
-          source: "."
+          source: "./front-iot-image-automated"
           target: "/home/dfurchert/iotApp/"
 
 
