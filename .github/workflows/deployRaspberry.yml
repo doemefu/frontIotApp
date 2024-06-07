@@ -13,13 +13,13 @@ jobs:
       name: 'RaspberryPi'
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@master
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@master
 
       - name: Build Docker image
         run: docker buildx build --platform linux/arm64 -t iot-app:front --load .
