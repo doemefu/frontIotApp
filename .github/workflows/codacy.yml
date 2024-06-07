@@ -15,12 +15,10 @@ name: Codacy Security Scan
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches:
+      - "**"
   schedule:
-    - cron: '21 19 * * 4'
+    - cron: '00 04 * * 4'
 
 permissions:
   contents: read
@@ -36,11 +34,16 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
+
+      - name: Set up Python
+        uses: actions/setup-python@main
+        with:
+          python-version: '3.x'
 
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@v4.4.0
+        uses: codacy/codacy-analysis-cli-action@main
         with:
           # Check https://github.com/codacy/codacy-analysis-cli#project-token to get your project token from your Codacy repository
           # You can also omit the token and run the tools that support default configurations
@@ -54,8 +57,30 @@ jobs:
           # This will handover control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
 
-      # Upload the SARIF file generated in the previous step
-      - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v3
+      - name: Split SARIF file if needed
+        run: |
+          python scripts/split_sarif.py results.sarif 20
+
+      - name: Check if part1 SARIF file exists
+        id: check-part1
+        run: |
+          if [ -e results_part1.sarif ]; then echo "FILE_PART1_EXISTS=true" >> $GITHUB_ENV; fi
+
+      - name: Check if part2 SARIF file exists
+        id: check-part2
+        run: |
+          if [ -e results_part2.sarif ]; then echo "FILE_PART2_EXISTS=true" >> $GITHUB_ENV; fi
+
+      - name: Upload SARIF results file - Part 1
+        if: env.FILE_PART1_EXISTS == 'true'
+        uses: github/codeql-action/upload-sarif@v3.25.6
         with:
-          sarif_file: results.sarif
+          sarif_file: results_part1.sarif
+          category: part1
+
+      - name: Upload SARIF results file - Part 2
+        if: env.FILE_PART2_EXISTS == 'true'
+        uses: github/codeql-action/upload-sarif@v3.25.6
+        with:
+          sarif_file: results_part2.sarif
+          category: part2
