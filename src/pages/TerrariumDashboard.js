@@ -1,43 +1,56 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Client } from '@stomp/stompjs';
+import React, {useEffect, useState, useRef} from 'react';
+import {Client} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import '../styles.css';
+import AuthService from "../services/auth.service";
+import {Link} from "react-router-dom";
 
 const TerrariumDashboard = () => {
+    const currentUser = AuthService.getCurrentUser();
     const [terrarium1, setTerrarium1] = useState({processing: {}});
     const [terrarium2, setTerrarium2] = useState({processing: {}});
     const clientRef = useRef(null); // Verwendung eines Refs für dauerhafte Referenzen
 
     useEffect(() => {
-        const socket = new SockJS('https://furchert.ch/api/ws');
-        clientRef.current = new Client({
-            webSocketFactory: () => socket,
-            debug: function (str) {
-                console.log(str);
-            },
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-        });
-
-        clientRef.current.onConnect = () => {
-            clientRef.current.subscribe('/topic/terrarium/terra1', message => {
-                setTerrarium1({...JSON.parse(message.body), processing: {}});
-            });
-            clientRef.current.subscribe('/topic/terrarium/terra2', message => {
-                setTerrarium2({...JSON.parse(message.body), processing: {}});
+        if (currentUser) {
+            const socket = new SockJS('https://furchert.ch/api/ws');
+            clientRef.current = new Client({
+                webSocketFactory: () => socket,
+                debug: function (str) {
+                    console.log(str);
+                },
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
             });
 
-            clientRef.current.publish({destination: '/app/requestData', body: 'terra1'});
-            clientRef.current.publish({destination: '/app/requestData', body: 'terra2'});
-        };
+            clientRef.current.onConnect = () => {
+                clientRef.current.subscribe('/topic/terrarium/terra1', message => {
+                    setTerrarium1({...JSON.parse(message.body), processing: {}});
+                });
+                clientRef.current.subscribe('/topic/terrarium/terra2', message => {
+                    setTerrarium2({...JSON.parse(message.body), processing: {}});
+                });
 
-        clientRef.current.activate();
+                clientRef.current.publish({destination: '/app/requestData', body: 'terra1'});
+                clientRef.current.publish({destination: '/app/requestData', body: 'terra2'});
+            };
 
-        return () => {
-            clientRef.current.deactivate();
-        };
+            clientRef.current.activate();
+
+            return () => {
+                clientRef.current.deactivate();
+            };
+        }
     }, []);
+
+    if (!currentUser) {
+        return (
+            <div className="container">
+                <p>You must be <Link to="/login">logged in</Link> to view this page.</p>
+            </div>
+        );
+    }
 
     const handleToggle = (terrariumId, field) => {
         // Determine which terrarium object to use based on terrariumId
@@ -74,10 +87,13 @@ const TerrariumDashboard = () => {
             <p>Temperature: {terrarium.temperature !== undefined ? `${terrarium.temperature.toFixed(2)}°C` : 'Loading...'}</p>
             <p>Humidity: {terrarium.humidity !== undefined ? `${Math.round(terrarium.humidity * 100) / 100}%` : 'Loading...'}</p>
             {['light', 'nightLight', 'rain', 'water'].map(field => (
-                <p><button key={field} className={`button ${getStatusClass(terrarium[field], terrarium.processing[field])}`}
-                        onClick={() => handleToggle(terrariumId, field)}>
-                    {field.split(/(?=[A-Z])/).join(" ")}: {terrarium[field] || 'Loading'}
-                </button></p>
+                <p>
+                    <button key={field}
+                            className={`button ${getStatusClass(terrarium[field], terrarium.processing[field])}`}
+                            onClick={() => handleToggle(terrariumId, field)}>
+                        {field.split(/(?=[A-Z])/).join(" ")}: {terrarium[field] || 'Loading'}
+                    </button>
+                </p>
             ))}
             <p className={getStatusClass(terrarium.mqttState)}>MQTT-Connection: {terrarium.mqttState || 'Loading'}</p>
         </div>
