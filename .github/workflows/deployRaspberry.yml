@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/download-artifact@main
         with:
-          name: back-iot-image-automated
+          name: front-iot-image-automated
 
       - name: Copy image to Raspberry Pi
         uses: appleboy/scp-action@master
@@ -54,8 +54,8 @@ jobs:
           username: ${{ secrets.RPI_USERNAME }}
           key: ${{ secrets.RPI_SSH_KEY }}
           port: ${{ secrets.RPI_PORT }}
-          source: "./front-iot-image-automated"
-          target: "/home/dfurchert/iotApp/"
+          source: ./front-iot-image-automated
+          target: /home/dfurchert/iotApp/
 
 
   deploy:
