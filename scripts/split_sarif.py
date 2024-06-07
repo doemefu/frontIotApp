@@ -18,6 +18,7 @@ def split_sarif(input_file, max_runs):
     with open('results_part2.sarif', 'w') as file:
         json.dump(part2, file, indent=2)
 
+
 if __name__ == '__main__':
     input_file = sys.argv[1]
     max_runs = int(sys.argv[2])
