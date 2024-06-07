@@ -1,5 +1,5 @@
 import axios from "axios";
-import TokenService from "./token.service";
+import Cookies from "js-cookie"; // Import the js-cookie library
 
 const instance = axios.create({
     baseURL: "https://furchert.ch/api",
@@ -13,15 +13,11 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     (config) => {
-        /*
-        const token = TokenService.getLocalAccessToken();
-        if (token) {
-            console.log("instance.interceptors.request.use fullfilled with token");
-            config.headers["Authorization"] = 'Bearer ' + token;
-        }else {
-        console.log("instance.interceptors.request.use fullfilled without token");
-        }*/
-
+        // Retrieve the CSRF token from cookies
+        const csrfToken = Cookies.get('XSRF-TOKEN');
+        if (csrfToken) {
+            config.headers["X-XSRF-TOKEN"] = csrfToken;
+        }
         return config;
     },
     (error) => {
