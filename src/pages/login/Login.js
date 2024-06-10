@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
 import AuthService from "../../services/auth.service";
+import Cookies from "js-cookie";
 
 const required = (value) => {
     if (!value) {
@@ -26,6 +27,13 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [csrfToken, setCsrfToken] = useState(""); // State to store the CSRF token
+
+    useEffect(() => {
+        // Fetch the CSRF token from the cookie at component mount
+        const token = Cookies.get('XSRF-TOKEN'); // Ensure the cookie name matches your configuration
+        setCsrfToken(token);
+    }, []);
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -93,6 +101,8 @@ const Login = () => {
                         />
                     </div>
 
+                    <input type="hidden" name="_csrf" value={csrfToken}/>
+
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <Input
@@ -121,10 +131,10 @@ const Login = () => {
                             </div>
                         </div>
                     )}
-                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
+                    <CheckButton style={{display: "none"}} ref={checkBtn}/>
                 </Form>
                 <div className="forgot-password">
-                    <Link to="/auth/forgotPassword">Forgot Password?</Link>
+                <Link to="/auth/forgotPassword">Forgot Password?</Link>
                 </div>
             </div>
         </div>
