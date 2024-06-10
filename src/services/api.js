@@ -1,20 +1,19 @@
 import axios from "axios";
-import Cookies from "js-cookie"; // Import the js-cookie library
+import Cookies from "js-cookie";
+import AuthService from "./auth.service"; // Import the js-cookie library
 
 const instance = axios.create({
     baseURL: "https://furchert.ch/api",
-    //baseURL: "http://backend:8080/api",
-    //baseURL: "https://iot-app-backend.azurewebsites.net/api",
     headers: {
         "Content-Type": "application/json",
     },
-    withCredentials: true,
+    withCredentials: true, // Ensure cookies are sent with requests
 });
 
 instance.interceptors.request.use(
     (config) => {
         // Retrieve the CSRF token from cookies
-        const csrfToken = Cookies.get('XSRF-TOKEN');
+        const csrfToken = Cookies.get('XSRF-TOKEN'); // Default cookie name used by Spring Security
         if (csrfToken) {
             config.headers["X-XSRF-TOKEN"] = csrfToken;
         }
@@ -44,11 +43,17 @@ instance.interceptors.response.use(
                         //refreshToken: TokenService.getLocalRefreshToken(),
                     });
 
-                    //const { accessToken } = axiosResponse.data;
-                    //TokenService.updateLocalAccessToken(accessToken);
-
-                    return instance(originalConfig);
+                    if (axiosResponse.status === 200) {
+                        // Handle the new access token here if necessary
+                        return instance(originalConfig);
+                    } else {
+                        // Logout user if refresh token request is unsuccessful
+                        AuthService.logout();
+                        return Promise.reject(error);
+                    }
                 } catch (_error) {
+                    // Logout user if refresh token request throws an error
+                    AuthService.logout();
                     return Promise.reject(_error);
                 }
             }
