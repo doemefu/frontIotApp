@@ -1,5 +1,6 @@
 import TokenService from "./token.service";
 import api from "./api";
+import Cookies from "js-cookie";
 
 const register = (username, email, password) =>{
     return api.post("/auth/register", {
@@ -36,6 +37,7 @@ const logout = () => {
             window.location.href = "/login"; // Redirect to login page
         })
         .catch((error) => {
+            Cookies.remove('XSRF-TOKEN');
             console.error("Logout Error:", error);
         });
 };
