@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import '../styles.css';
 import AuthService from "../services/auth.service";
 import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const TerrariumDashboard = () => {
     const currentUser = AuthService.getCurrentUser();
@@ -14,6 +15,7 @@ const TerrariumDashboard = () => {
     useEffect(() => {
         if (currentUser) {
             const socket = new SockJS('https://furchert.ch/api/ws');
+            const csrfToken = Cookies.get('XSRF-TOKEN'); // Default cookie name used by Spring Security
             clientRef.current = new Client({
                 webSocketFactory: () => socket,
                 debug: function (str) {
@@ -22,6 +24,11 @@ const TerrariumDashboard = () => {
                 reconnectDelay: 5000,
                 heartbeatIncoming: 4000,
                 heartbeatOutgoing: 4000,
+                beforeConnect: (frame) => {
+                    if (csrfToken) {
+                        frame.headers['X-XSRF-TOKEN'] = csrfToken;
+                    }
+                }
             });
 
             clientRef.current.onConnect = () => {

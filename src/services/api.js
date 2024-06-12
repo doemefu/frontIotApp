@@ -27,37 +27,51 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
-        console.log("interceptor 1: " + response);
+        // Successful response processing
+        console.log("Interceptor success: ", response);
         return response;
     },
     async (error) => {
         const originalConfig = error.config;
-        console.log("interceptor 2");
-        if (originalConfig.url !== "/auth/login" && error.response) {
-            // Access Token was expired
-            if (error.response.status === 401 && !originalConfig._retry) {
-                originalConfig._retry = true;
+        console.log("Interceptor error handling");
 
-                try {
-                    const axiosResponse = await instance.post("/auth/refreshtoken", {
-                        //refreshToken: TokenService.getLocalRefreshToken(),
-                    });
-
-                    if (axiosResponse.status === 200) {
-                        // Handle the new access token here if necessary
-                        return instance(originalConfig);
-                    } else {
-                        // Logout user if refresh token request is unsuccessful
-                        AuthService.logout();
-                        return Promise.reject(error);
-                    }
-                } catch (_error) {
-                    // Logout user if refresh token request throws an error
-                    AuthService.logout();
-                    return Promise.reject(_error);
-                }
+        // Check if it's a login or logout failure and retry once
+        if ((originalConfig.url.includes("/auth/login") || originalConfig.url.includes("/auth/logout")) && !originalConfig._retry) {
+            console.log("Login or Logout request failed, retrying once");
+            originalConfig._retry = true;  // Flag to prevent further retry attempts
+            try {
+                // Directly retry the request without modifying the original request data
+                return instance(originalConfig);
+            } catch (_error) {
+                console.log("Second attempt failed for Login/Logout");
+                return Promise.reject(_error);
             }
         }
+
+        // Directly handling failed attempts to refresh the token
+        if (originalConfig.url === "/auth/refreshtoken") {
+            console.log("Refresh token request failed, logging out");
+            await AuthService.logout();
+            return Promise.reject(error);
+        }
+
+        // Handling expired access tokens
+        if (!originalConfig.url.includes("/auth/login") && !originalConfig.url.includes("/auth/logout") && error.response.status === 401 && !originalConfig._retry) {
+            console.log("Access token expired, attempting to refresh");
+            originalConfig._retry = true;
+            try {
+                const axiosResponse = await instance.post("/auth/refreshtoken");
+                if (axiosResponse.status === 200) {
+                    console.log("Token refreshed successfully, retrying original request");
+                    return instance(originalConfig);
+                }
+            } catch (_error) {
+                console.log("Failed to refresh token, logging out");
+                await AuthService.logout();
+                return Promise.reject(_error);
+            }
+        }
+
         return Promise.reject(error);
     }
 );

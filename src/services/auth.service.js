@@ -29,12 +29,12 @@ const login = (username, password) => {
 };
 
 const logout = () => {
+    TokenService.removeUser();
     return api
         .post("/auth/logout")
         .then((response) => {
             console.log("Logout Response:", response);
-            TokenService.removeUser();
-            window.location.href = "/login"; // Redirect to login page
+            window.location.href = "/home"; // Redirect to home page
         })
         .catch((error) => {
             Cookies.remove('XSRF-TOKEN');
