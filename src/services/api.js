@@ -8,15 +8,21 @@ const instance = axios.create({
         "Content-Type": "application/json",
     },
     withCredentials: true, // Ensure cookies are sent with requests
+    xsrfCookieName: 'XSRF-TOKEN', // default
+    xsrfHeaderName: 'X-XSRF-TOKEN', // default
 });
 
 instance.interceptors.request.use(
     (config) => {
-        // Retrieve the CSRF token from cookies
-        const csrfToken = Cookies.get('XSRF-TOKEN'); // Default cookie name used by Spring Security
-        if (csrfToken) {
-            config.headers["X-XSRF-TOKEN"] = csrfToken;
+        /*
+        if(config.method !== "GET") {
+            // Retrieve the CSRF token from cookies
+            const csrfToken = Cookies.get('XSRF-TOKEN'); // Default cookie name used by Spring Security
+            if (csrfToken) {
+                config.headers["X-XSRF-TOKEN"] = csrfToken;
+            }
         }
+         */
         return config;
     },
     (error) => {
