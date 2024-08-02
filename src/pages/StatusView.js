@@ -13,7 +13,7 @@ const StatusView = () => {
             api
                 .get('data/influxDataNew', {})
                 .then(res => {
-                    setData(res.data.map());
+                    setData(res.data);
                 })
                 .catch(err => {
                     console.error(err);
