@@ -24,6 +24,7 @@ import ResetPassword from "./pages/ResetPassword";
 import { useMediaQuery } from 'react-responsive';
 import NewDataView from "./pages/dataView/NewDataView";
 import TerrariumDashboard from "./pages/TerrariumDashboard";
+import StatusView from "./pages/StatusView";
 
 const App = () => {
     const isDesktopOrLaptop = useMediaQuery({ query: '(min-width: 1224px)' });
@@ -163,6 +164,11 @@ const App = () => {
                                         {currentUser.username}
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link to={"/statusView"} className="nav-link">
+                                        Status View
+                                    </Link>
+                                </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" onClick={logOut} to={"/home"}>
                                         LogOut
@@ -248,6 +254,11 @@ const App = () => {
                                     {currentUser.username}
                                 </Link>
                             )}
+                            {currentUser && (
+                                <Link to={"/statusView"} className="nav-link">
+                                    Status View
+                                </Link>
+                            )}
                             {currentUser ? (
                                 <Link className="nav-link" onClick={logOut} to={"/home"}>
                                     LogOut
@@ -282,6 +293,7 @@ const App = () => {
                     <Route path="/admin" element={<HeaderAdmin/>}/>
                     <Route path="/oldDdataView" element={<DataView/>}/>
                     <Route path="/dataView" element={<NewDataView/>}/>
+                    <Route path="/statusView" element={<StatusView/>}/>
                     <Route path="/terrariumDashboard" element={<TerrariumDashboard/>}/>
                     <Route path="/admin/showUsers" element={<ShowUsers/>}/>
                     <Route path="/admin/showRoles" element={<DataView/>}/>
