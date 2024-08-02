@@ -11,7 +11,7 @@ const StatusView = () => {
     useEffect(() => {
         if (currentUser) {
             api
-                .get('data/influxDataNew', {})
+                .get('data/deviceStatus', {})
                 .then(res => {
                     setData(res.data);
                 })
