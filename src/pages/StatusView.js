@@ -5,7 +5,8 @@ import api from "../services/api";
 
 const StatusView = () => {
     const currentUser = AuthService.getCurrentUser();
-    const [data, setData] = useState(Array(25).fill(-1));
+//    const [data, setData] = useState(Array(25).fill(-1));
+    const [data, setData] = useState([]);
 
     // Fetch data and update the state
     useEffect(() => {
