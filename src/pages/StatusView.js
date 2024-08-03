@@ -18,6 +18,7 @@ const StatusView = () => {
                 .catch(err => {
                     console.error(err);
                 });
+            console.log(data);
         }
     }, []);
 
