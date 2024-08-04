@@ -14,6 +14,7 @@ const StatusView = () => {
             api
                 .get('data/deviceStatus', {})
                 .then(res => {
+                    console.log(res.data);
                     setData(res.data);
                 })
                 .catch(err => {
