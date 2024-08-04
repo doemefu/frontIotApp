@@ -50,3 +50,16 @@
     -webkit-user-select: none;
     touch-action: manipulation;
 }
+
+.status-container {
+    display: flex;
+    align-items: flex-end;
+    background-color: #212937;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+.stripe {
+    border-radius: 2px;
+}
