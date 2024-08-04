@@ -42,9 +42,10 @@ const StatusView = () => {
 
 
     const stripeWidth = 8;
-    const stripeMargin = 2;
+    const stripeMargin = 3;
     const totalStripes = 24;
-    const totalWidth = totalStripes * (stripeWidth + stripeMargin) + stripeMargin;
+    const padding = 20;
+    const totalWidth = totalStripes * (stripeWidth + stripeMargin) + stripeMargin + 2*padding;
     //const totalWidth = 270;
     //rand neben bars: 40
 
@@ -53,12 +54,12 @@ const StatusView = () => {
             <header className="jumbotron">
                 <h3><strong>Device states will be shown here</strong></h3>
             </header>
-            <div className="status-container" style={{ width: totalWidth + 'px', height: '300px' }}>
+            <div className="status-container" style={{width: totalWidth + 'px', height: '67px'}}>
                 {data.slice(0, 24).map((hour, index) => {
                     let backgroundColor;
                     switch (hour) {
                         case -1:
-                            backgroundColor = '#FFA500'; // Orange for no data
+                            backgroundColor = '#738199'; // Grey for no data
                             break;
                         case 0:
                             backgroundColor = '#DF484A'; // Red
@@ -67,7 +68,7 @@ const StatusView = () => {
                             backgroundColor = '#36D56C'; // Green
                             break;
                         default:
-                            backgroundColor = '#738199'; // Default color if needed
+                            backgroundColor = '#FFA500'; // Orange for mixed states
                     }
                     return (
                         <div
@@ -76,15 +77,28 @@ const StatusView = () => {
                             style={{
                                 backgroundColor,
                                 width: stripeWidth + 'px',
-                                height: '100px',
+                                height: '19px',
                                 margin: `0 ${stripeMargin / 2}px`
                             }}
                         />
                     );
                 })}
-            </div>
-            <div className="status-text" style={{ position: 'absolute', top: '10px', right: '10px', color: liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#FFA500') }}>
-                {liveStatus}
+                <div className="status-text" style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    color: liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#738199')
+                }}>
+                    {liveStatus}
+                </div>
+                <div className="status-text" style={{
+                    position: 'absolute',
+                    top: '10px',
+                    left: '10px',
+                    color: '#FFFFFF'
+                }}>
+                    Terra 1
+                </div>
             </div>
         </div>
     );
