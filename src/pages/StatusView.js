@@ -19,9 +19,9 @@ const StatusView = () => {
                     console.log(res.data);
                     setData(res.data);
                     const statusValue = res.data[24];
-                    if (statusValue === 1) {
+                    if (statusValue === 1.0) {
                         setLiveStatus("operational");
-                    } else if (statusValue === 0) {
+                    } else if (statusValue === 0.0) {
                         setLiveStatus("down");
                     }
                 })
@@ -55,17 +55,17 @@ const StatusView = () => {
                 {data.slice(0, 24).map((hour, index) => {
                     let backgroundColor;
                     switch (hour) {
-                        case -1:
-                            backgroundColor = '#FFA500'; // Orange for no data
+                        case -1.0:
+                            backgroundColor = '#738199'; // Grey for no data
                             break;
-                        case 0:
+                        case 0.0:
                             backgroundColor = '#DF484A'; // Red
                             break;
-                        case 1:
+                        case 1.0:
                             backgroundColor = '#36D56C'; // Green
                             break;
                         default:
-                            backgroundColor = '#738199'; // Default color if needed
+                            backgroundColor = '#FFA500'; // Orange for mixed
                     }
                     return (
                         <div
@@ -85,7 +85,7 @@ const StatusView = () => {
                 position: 'absolute',
                 top: '10px',
                 right: '10px',
-                color: liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#FFA500')
+                color: liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#738199')
             }}>
                 {liveStatus}
             </div>
