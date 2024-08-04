@@ -7,7 +7,7 @@ const StatusView = () => {
     const currentUser = AuthService.getCurrentUser();
 //    const [data, setData] = useState(Array(25).fill(-1));
     const [data, setData] = useState([]);
-    const [liveStatus, setLiveStatus] = useState("unknown");
+    const [liveStatus, setLiveStatus] = useState("Unknown");
 
 
     // Fetch data and update the state
@@ -45,7 +45,7 @@ const StatusView = () => {
     const stripeMargin = 3;
     const totalStripes = 24;
     const padding = 20;
-    const totalWidth = totalStripes * (stripeWidth + stripeMargin) + stripeMargin + 2*padding;
+    const totalWidth = totalStripes * (stripeWidth + stripeMargin) + 2*padding;
     //const totalWidth = 270;
     //rand neben bars: 40
 
@@ -54,7 +54,7 @@ const StatusView = () => {
             <header className="jumbotron">
                 <h3><strong>Device states will be shown here</strong></h3>
             </header>
-            <div className="status-container" style={{width: totalWidth + 'px', height: '67px'}}>
+            <div className="status-container" style={{width: totalWidth + 'px', height: '67px', position: 'relative'}}>
                 {data.slice(0, 24).map((hour, index) => {
                     let backgroundColor;
                     switch (hour) {
@@ -83,21 +83,19 @@ const StatusView = () => {
                         />
                     );
                 })}
-                <div className="status-text" style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    color: liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#738199')
-                }}>
-                    {liveStatus}
-                </div>
-                <div className="status-text" style={{
-                    position: 'absolute',
+                <div className="status-title" style={{
                     top: '10px',
                     left: '10px',
                     color: '#FFFFFF'
                 }}>
                     Terra 1
+                </div>
+                <div className="status-text" style={{
+                    top: '10px',
+                    right: '10px',
+                    color: liveStatus === 'Operational' ? '#36D56C' : (liveStatus === 'Down' ? '#DF484A' : '#738199')
+                }}>
+                    {liveStatus}
                 </div>
             </div>
         </div>

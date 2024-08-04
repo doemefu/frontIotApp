@@ -63,3 +63,16 @@
 .stripe {
     border-radius: 2px;
 }
+
+.status-title {
+    font-weight: 1000;
+    font-stretch: extra-expanded;
+    font-variation-settings: "GRAD" 400, "opsz" 17;
+}
+
+.status-text {
+    font-weight: 1;
+    font-variation-settings: "GRAD" 1000, "opsz" 17;
+    font-stretch: extra-expanded;
+}
+
