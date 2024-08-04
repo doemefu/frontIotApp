@@ -44,14 +44,16 @@ const StatusView = () => {
     const stripeWidth = 8;
     const stripeMargin = 2;
     const totalStripes = 24;
-    const totalWidth = totalStripes * (stripeWidth + stripeMargin) + stripeMargin;
+    //const totalWidth = totalStripes * (stripeWidth + stripeMargin) + stripeMargin;
+    const totalWidth = 270;
+    //rand neben bars: 40
 
     return (
         <div className="container">
             <header className="jumbotron">
                 <h3><strong>Device states will be shown here</strong></h3>
             </header>
-            <svg width="550" height="300" viewBox="0 0 550 300">
+            <svg width={totalWidth} height="300" viewBox={`0 0 ${totalWidth} 300`}>
                 <g className="animated-slide hi-2">
                     <path
                         fill="#212937"
@@ -63,7 +65,7 @@ const StatusView = () => {
                             let fillColor;
                             switch (hour) {
                                 case -1:
-                                    fillColor = '#FFA500'; // Orange for no data
+                                    fillColor = '#738199'; // grey for no data
                                     break;
                                 case 0:
                                     fillColor = '#DF484A'; // Red
@@ -72,7 +74,7 @@ const StatusView = () => {
                                     fillColor = '#36D56C'; // Green
                                     break;
                                 default:
-                                    fillColor = '#738199'; // Default color if needed
+                                    fillColor = '#FFA500'; // Orange for mixed states
                             }
                             return (
                                 <path
@@ -88,7 +90,7 @@ const StatusView = () => {
                 <text x="10" y="30" fill="#FFFFFF" fontSize="20" fontWeight="bold">Terra1</text>
                 {/* Status in the top right */}
                 <text x="470" y="30"
-                      fill={liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#FFA500')}
+                      fill={liveStatus === 'operational' ? '#36D56C' : (liveStatus === 'down' ? '#DF484A' : '#738199')}
                       fontSize="20" fontWeight="bold">
                     {liveStatus}
                 </text>
