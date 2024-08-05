@@ -86,7 +86,7 @@ const StatusView = () => {
                 <div className="status-title" style={{
                     position: 'absolute',
                     top: '10px',
-                    left: '10px',
+                    left: '20px',
                     color: '#FFFFFF'
                 }}>
                     Terra 1
@@ -94,7 +94,7 @@ const StatusView = () => {
                 <div className="status-text" style={{
                     position: 'absolute',
                     top: '10px',
-                    right: '10px',
+                    right: '20px',
                     color: liveStatus === 'Operational' ? '#36D56C' : (liveStatus === 'Down' ? '#DF484A' : '#738199')
                 }}>
                     {liveStatus}
