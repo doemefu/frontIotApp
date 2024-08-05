@@ -20,9 +20,9 @@ const StatusView = () => {
                     setData(res.data);
                     const statusValue = res.data[24];
                     if (statusValue === 1.0) {
-                        setLiveStatus("operational");
+                        setLiveStatus("Operational");
                     } else if (statusValue === 0.0) {
-                        setLiveStatus("down");
+                        setLiveStatus("Down");
                     }
                 })
                 .catch(err => {
@@ -84,6 +84,7 @@ const StatusView = () => {
                     );
                 })}
                 <div className="status-title" style={{
+                    position: 'absolute',
                     top: '10px',
                     left: '10px',
                     color: '#FFFFFF'
@@ -91,6 +92,7 @@ const StatusView = () => {
                     Terra 1
                 </div>
                 <div className="status-text" style={{
+                    position: 'absolute',
                     top: '10px',
                     right: '10px',
                     color: liveStatus === 'Operational' ? '#36D56C' : (liveStatus === 'Down' ? '#DF484A' : '#738199')
